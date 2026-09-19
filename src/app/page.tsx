@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { db } from "@/lib/db";
 import ListingCard from "@/components/listing-card";
+import WolfvilleStreetscape from "@/components/illustrations/wolfville-streetscape";
+import LibraryBuilding from "@/components/illustrations/library-building";
 
 export default async function Home() {
   const recentListings = await db.listing.findMany({
@@ -55,6 +57,10 @@ export default async function Home() {
             </Link>
           </div>
         </div>
+
+        <div className="h-[260px] w-full overflow-hidden sm:h-[320px] lg:h-[380px]">
+          <WolfvilleStreetscape className="h-full w-full" />
+        </div>
       </section>
 
       <section className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
@@ -86,27 +92,37 @@ export default async function Home() {
       </section>
 
       <section className="border-t border-card-border bg-card/60">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-14 sm:px-6 md:grid-cols-3">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 md:grid-cols-2">
+          <LibraryBuilding className="w-full max-w-md justify-self-center md:justify-self-start" />
+
           <div>
-            <h3 className="mb-2 font-semibold text-garnet">Built for students</h3>
-            <p className="text-sm text-muted">
-              Filter by lease length, so you can find a school-year lease, a summer
-              sublet, or a full 12-month term.
+            <h2 className="text-3xl font-bold tracking-tight">Built with Wolfville in mind</h2>
+            <p className="mt-4 text-muted">
+              We built this for the walk between Main Street and campus &mdash; not a
+              generic listings site. A few things we designed around:
             </p>
-          </div>
-          <div>
-            <h3 className="mb-2 font-semibold text-garnet">Roommate matching</h3>
-            <p className="text-sm text-muted">
-              Have a spare room or need one? Post to the roommate board and connect
-              directly with other students.
-            </p>
-          </div>
-          <div>
-            <h3 className="mb-2 font-semibold text-garnet">Free to post</h3>
-            <p className="text-sm text-muted">
-              Create an account and post as many rentals or roommate listings as you
-              need, no fees.
-            </p>
+            <ul className="mt-5 flex flex-col gap-3 text-sm">
+              <li>
+                <span className="font-semibold text-garnet">Lease length that matches the school year.</span>{" "}
+                Filter for a 12-month lease, an 8-month school-year lease, or a summer
+                sublet.
+              </li>
+              <li>
+                <span className="font-semibold text-garnet">Roommate matching, built in.</span>{" "}
+                Have a spare room or need one? Post to the roommate board and connect
+                directly.
+              </li>
+              <li>
+                <span className="font-semibold text-garnet">Contact stays private.</span>{" "}
+                A poster&apos;s email is only shared with logged-in students, never posted
+                publicly.
+              </li>
+              <li>
+                <span className="font-semibold text-garnet">Free to post.</span> Create an
+                account and post as many rentals or roommate listings as you need, no
+                fees.
+              </li>
+            </ul>
           </div>
         </div>
       </section>
