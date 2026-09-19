@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/dal";
 import { toggleFavorite, deleteListing, setListingStatus } from "@/lib/actions/listings";
 import DeleteButton from "@/components/delete-button";
+import StarRating from "@/components/star-rating";
 
 async function getListing(id: string) {
   return db.listing.findUnique({
@@ -54,6 +55,12 @@ export default async function ListingDetailPage({
     : null;
 
   const activeAmenities = amenityLabels.filter((a) => listing[a.key]);
+
+  const ratingAgg = await db.rating.aggregate({
+    where: { ratedUserId: listing.authorId },
+    _avg: { score: true },
+    _count: true,
+  });
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6">
@@ -212,8 +219,16 @@ export default async function ListingDetailPage({
           </div>
 
           <div className="rounded-xl border border-card-border bg-card p-5 text-sm text-muted">
-            <p className="font-semibold text-foreground">Posted by {listing.author.name}</p>
-            <p className="mt-2">
+            <Link
+              href={`/users/${listing.author.id}`}
+              className="font-semibold text-foreground hover:text-garnet hover:underline"
+            >
+              Posted by {listing.author.name}
+            </Link>
+            <div className="mt-1">
+              <StarRating average={ratingAgg._avg.score ?? 0} count={ratingAgg._count} size="sm" />
+            </div>
+            <p className="mt-3">
               Meet in person before paying anything, and never wire money to someone
               you haven&apos;t met.
             </p>

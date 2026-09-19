@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import ListingCard from "@/components/listing-card";
+import Select from "@/components/ui/select";
 import { NEIGHBORHOODS, PROPERTY_TYPES, LEASE_LENGTHS } from "@/lib/validation";
 import type { Prisma } from "@/generated/prisma/client";
 
@@ -72,87 +73,71 @@ export default async function ListingsPage({
 
       <form
         method="get"
-        className="mb-8 grid grid-cols-2 gap-3 rounded-xl border border-card-border bg-card p-4 sm:grid-cols-3 lg:grid-cols-6"
+        className="mb-8 grid grid-cols-2 gap-3 rounded-2xl border border-card-border bg-card p-5 shadow-sm sm:grid-cols-3 lg:grid-cols-6"
       >
         <input
           type="text"
           name="q"
           defaultValue={params.q}
           placeholder="Keyword"
-          className="col-span-2 rounded-lg border border-card-border bg-background px-3 py-2 text-sm outline-none focus:border-garnet sm:col-span-1"
+          className="col-span-2 rounded-xl border border-card-border bg-background px-4 py-2.5 text-sm outline-none transition focus:border-garnet focus:ring-2 focus:ring-garnet/15 sm:col-span-1"
         />
         <input
           type="number"
           name="minPrice"
           defaultValue={params.minPrice}
           placeholder="Min $"
-          className="rounded-lg border border-card-border bg-background px-3 py-2 text-sm outline-none focus:border-garnet"
+          className="rounded-xl border border-card-border bg-background px-4 py-2.5 text-sm outline-none transition focus:border-garnet focus:ring-2 focus:ring-garnet/15"
         />
         <input
           type="number"
           name="maxPrice"
           defaultValue={params.maxPrice}
           placeholder="Max $"
-          className="rounded-lg border border-card-border bg-background px-3 py-2 text-sm outline-none focus:border-garnet"
+          className="rounded-xl border border-card-border bg-background px-4 py-2.5 text-sm outline-none transition focus:border-garnet focus:ring-2 focus:ring-garnet/15"
         />
-        <select
-          name="bedrooms"
-          defaultValue={params.bedrooms ?? ""}
-          className="rounded-lg border border-card-border bg-background px-3 py-2 text-sm outline-none focus:border-garnet"
-        >
+        <Select name="bedrooms" defaultValue={params.bedrooms}>
           <option value="">Any beds</option>
           {[1, 2, 3, 4, 5].map((n) => (
             <option key={n} value={n}>
               {n}+ bed
             </option>
           ))}
-        </select>
-        <select
-          name="propertyType"
-          defaultValue={params.propertyType ?? ""}
-          className="rounded-lg border border-card-border bg-background px-3 py-2 text-sm outline-none focus:border-garnet"
-        >
+        </Select>
+        <Select name="propertyType" defaultValue={params.propertyType}>
           <option value="">Any type</option>
           {PROPERTY_TYPES.map((type) => (
             <option key={type} value={type}>
               {type}
             </option>
           ))}
-        </select>
-        <select
-          name="neighborhood"
-          defaultValue={params.neighborhood ?? ""}
-          className="rounded-lg border border-card-border bg-background px-3 py-2 text-sm outline-none focus:border-garnet"
-        >
+        </Select>
+        <Select name="neighborhood" defaultValue={params.neighborhood}>
           <option value="">Any neighborhood</option>
           {NEIGHBORHOODS.map((n) => (
             <option key={n} value={n}>
               {n}
             </option>
           ))}
-        </select>
-        <select
-          name="leaseLength"
-          defaultValue={params.leaseLength ?? ""}
-          className="col-span-2 rounded-lg border border-card-border bg-background px-3 py-2 text-sm outline-none focus:border-garnet sm:col-span-1"
-        >
+        </Select>
+        <Select name="leaseLength" defaultValue={params.leaseLength} className="col-span-2 sm:col-span-1">
           <option value="">Any lease length</option>
           {LEASE_LENGTHS.map((l) => (
             <option key={l} value={l}>
               {l}
             </option>
           ))}
-        </select>
+        </Select>
         <div className="col-span-2 flex gap-2 sm:col-span-3 lg:col-span-1">
           <button
             type="submit"
-            className="flex-1 rounded-lg bg-garnet px-4 py-2 text-sm font-semibold text-white transition hover:bg-garnet-dark"
+            className="flex-1 rounded-xl bg-garnet px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-garnet-dark"
           >
             Apply
           </button>
           <Link
             href="/listings"
-            className="flex-1 rounded-lg border border-card-border px-4 py-2 text-center text-sm font-semibold transition hover:border-garnet hover:text-garnet"
+            className="flex-1 rounded-xl border border-card-border px-4 py-2.5 text-center text-sm font-semibold transition hover:border-garnet hover:text-garnet"
           >
             Clear
           </Link>

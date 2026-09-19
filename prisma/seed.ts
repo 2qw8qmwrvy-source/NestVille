@@ -26,6 +26,7 @@ async function main() {
   );
 
   await db.favorite.deleteMany({});
+  await db.rating.deleteMany({});
   await db.listingImage.deleteMany({});
   await db.listing.deleteMany({});
   await db.roommatePost.deleteMany({});
