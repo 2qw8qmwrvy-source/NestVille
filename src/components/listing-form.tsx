@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import type { ListingFormState } from "@/lib/actions/listings";
+import Select from "@/components/ui/select";
 import { NEIGHBORHOODS, PROPERTY_TYPES, LEASE_LENGTHS } from "@/lib/validation";
 
 export type ListingFormDefaults = {
@@ -70,25 +71,25 @@ export default function ListingForm({
         </Field>
 
         <Field label="Neighborhood" error={errors.neighborhood?.[0]}>
-          <select name="neighborhood" defaultValue={defaults?.neighborhood ?? ""} className="input">
+          <Select name="neighborhood" defaultValue={defaults?.neighborhood}>
             <option value="">Select neighborhood</option>
             {NEIGHBORHOODS.map((n) => (
               <option key={n} value={n}>
                 {n}
               </option>
             ))}
-          </select>
+          </Select>
         </Field>
 
         <Field label="Property type" error={errors.propertyType?.[0]}>
-          <select name="propertyType" defaultValue={defaults?.propertyType ?? ""} className="input">
+          <Select name="propertyType" defaultValue={defaults?.propertyType}>
             <option value="">Select type</option>
             {PROPERTY_TYPES.map((t) => (
               <option key={t} value={t}>
                 {t}
               </option>
             ))}
-          </select>
+          </Select>
         </Field>
 
         <Field label="Rent (CAD / month)" error={errors.price?.[0]}>
@@ -103,14 +104,14 @@ export default function ListingForm({
         </Field>
 
         <Field label="Lease length" error={errors.leaseLength?.[0]}>
-          <select name="leaseLength" defaultValue={defaults?.leaseLength ?? ""} className="input">
+          <Select name="leaseLength" defaultValue={defaults?.leaseLength}>
             <option value="">Select lease length</option>
             {LEASE_LENGTHS.map((l) => (
               <option key={l} value={l}>
                 {l}
               </option>
             ))}
-          </select>
+          </Select>
         </Field>
 
         <Field label="Bedrooms" error={errors.bedrooms?.[0]}>

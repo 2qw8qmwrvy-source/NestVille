@@ -68,6 +68,11 @@ export const ListingSchema = z.object({
     .optional(),
 });
 
+export const RatingSchema = z.object({
+  score: z.coerce.number().int().min(1, "Pick a star rating.").max(5),
+  comment: z.string().trim().max(500).optional(),
+});
+
 export const RoommatePostSchema = z.object({
   type: z.enum(["have_room", "need_room"]),
   title: z.string().trim().min(5, "Title must be at least 5 characters.").max(120),

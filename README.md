@@ -20,6 +20,9 @@ Not affiliated with or endorsed by Acadia University.
 - **Favorites** — save listings you're interested in.
 - **Contact by email** — logged-in users can email a poster directly; contact info
   is hidden from logged-out visitors and from the listing itself.
+- **Ratings & public profiles** — after dealing with someone, rate them 1-5 stars
+  with an optional comment. Average ratings show on listings, roommate posts, and
+  each user's public profile page.
 
 ## Tech stack
 

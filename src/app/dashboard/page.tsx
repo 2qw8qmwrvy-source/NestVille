@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { requireSession } from "@/lib/dal";
 import ListingCard from "@/components/listing-card";
 import RoommateCard from "@/components/roommate-card";
+import StarRating from "@/components/star-rating";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -33,10 +34,29 @@ export default async function DashboardPage() {
     }),
   ]);
 
+  const ratingAgg = await db.rating.aggregate({
+    where: { ratedUserId: session.userId },
+    _avg: { score: true },
+    _count: true,
+  });
+
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6">
-      <h1 className="text-3xl font-bold tracking-tight">Welcome, {user?.name}</h1>
-      <p className="mt-1 text-muted">{user?.email}</p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Welcome, {user?.name}</h1>
+          <p className="mt-1 text-muted">{user?.email}</p>
+        </div>
+        <Link
+          href={`/users/${session.userId}`}
+          className="rounded-full border border-card-border px-4 py-2 text-sm font-semibold transition hover:border-garnet hover:text-garnet"
+        >
+          View your public profile
+        </Link>
+      </div>
+      <div className="mt-2">
+        <StarRating average={ratingAgg._avg.score ?? 0} count={ratingAgg._count} />
+      </div>
 
       <Section
         title="Your listings"

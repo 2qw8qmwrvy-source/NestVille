@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { db } from "@/lib/db";
 import ListingCard from "@/components/listing-card";
 import WolfvilleStreetscape from "@/components/illustrations/wolfville-streetscape";
@@ -124,6 +125,40 @@ export default async function Home() {
               </li>
             </ul>
           </div>
+        </div>
+      </section>
+
+      <section className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
+        <h2 className="text-2xl font-bold tracking-tight">Explore Wolfville</h2>
+        <p className="mt-1 text-sm text-muted">
+          A few sights you&apos;ll get to know: the walk up to campus and the corner
+          shops on Main Street.
+        </p>
+        <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <figure className="overflow-hidden rounded-xl border-t-4 border-garnet bg-card shadow-sm">
+            <Image
+              src="/images/campus-hall.jpg"
+              alt="Illustration of a campus hall near Acadia University"
+              width={1365}
+              height={768}
+              className="h-56 w-full object-cover sm:h-64"
+            />
+            <figcaption className="p-4 text-sm font-semibold text-garnet-dark">
+              The walk up to campus
+            </figcaption>
+          </figure>
+          <figure className="overflow-hidden rounded-xl border-t-4 border-gold bg-card shadow-sm">
+            <Image
+              src="/images/downtown-wolfville.jpg"
+              alt="Illustration of a downtown Wolfville street with shops"
+              width={1344}
+              height={784}
+              className="h-56 w-full object-cover sm:h-64"
+            />
+            <figcaption className="p-4 text-sm font-semibold text-garnet-dark">
+              Main Street, five minutes away
+            </figcaption>
+          </figure>
         </div>
       </section>
     </div>
