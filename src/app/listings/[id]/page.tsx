@@ -6,13 +6,14 @@ import { getCurrentUser } from "@/lib/dal";
 import { toggleFavorite, deleteListing, setListingStatus } from "@/lib/actions/listings";
 import DeleteButton from "@/components/delete-button";
 import StarRating from "@/components/star-rating";
+import RoleBadge from "@/components/role-badge";
 
 async function getListing(id: string) {
   return db.listing.findUnique({
     where: { id },
     include: {
       images: { orderBy: { position: "asc" } },
-      author: { select: { id: true, name: true, email: true } },
+      author: { select: { id: true, name: true, email: true, role: true } },
     },
   });
 }
@@ -191,7 +192,7 @@ export default async function ListingDetailPage({
                   <>
                     <a
                       href={`mailto:${listing.author.email}?subject=${encodeURIComponent(
-                        `Wolfville Student Rentals: ${listing.title}`
+                        `NestVille: ${listing.title}`
                       )}`}
                       className="rounded-full bg-garnet px-4 py-2 text-center text-sm font-semibold text-white transition hover:bg-garnet-dark"
                     >
@@ -225,7 +226,10 @@ export default async function ListingDetailPage({
             >
               Posted by {listing.author.name}
             </Link>
-            <div className="mt-1">
+            <div className="mt-1.5">
+              <RoleBadge role={listing.author.role} />
+            </div>
+            <div className="mt-1.5">
               <StarRating average={ratingAgg._avg.score ?? 0} count={ratingAgg._count} size="sm" />
             </div>
             <p className="mt-3">

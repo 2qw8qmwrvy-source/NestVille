@@ -7,13 +7,14 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-14 sm:px-6">
-      <h1 className="text-3xl font-bold tracking-tight">About Wolfville Student Rentals</h1>
+      <h1 className="text-3xl font-bold tracking-tight">About NestVille</h1>
       <p className="mt-4 leading-relaxed text-muted">
-        Wolfville Student Rentals is an independent, student-built listings board for
-        the Wolfville, Nova Scotia community around Acadia University. Students and
-        local landlords can post rentals, and students can find or offer a room on
-        the roommate board. It is not affiliated with, run by, or endorsed by Acadia
-        University.
+        NestVille is an independent, student-built listings board for the Wolfville,
+        Nova Scotia community around Acadia University. Students sign up with their
+        @acadiau.ca email so you know who you&apos;re dealing with, landlords can post
+        verified rentals, and students can find or offer a room on the roommate
+        board. Ratings from past rentals help build trust on both sides. NestVille is
+        not affiliated with, run by, or endorsed by Acadia University.
       </p>
 
       <h2 className="mt-10 text-xl font-bold tracking-tight">Staying safe while renting</h2>

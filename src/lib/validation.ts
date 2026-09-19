@@ -33,11 +33,24 @@ export const ROOMMATE_TYPES = [
   { value: "need_room", label: "I'm looking for a room or roommate" },
 ] as const;
 
-export const SignupSchema = z.object({
-  name: z.string().trim().min(2, "Name must be at least 2 characters."),
-  email: z.email("Enter a valid email address.").trim().toLowerCase(),
-  password: z.string().min(8, "Password must be at least 8 characters."),
-});
+export const ACADIA_EMAIL_DOMAIN = "@acadiau.ca";
+
+export const USER_ROLES = [
+  { value: "student", label: "Student" },
+  { value: "landlord", label: "Landlord / property manager" },
+] as const;
+
+export const SignupSchema = z
+  .object({
+    name: z.string().trim().min(2, "Name must be at least 2 characters."),
+    email: z.email("Enter a valid email address.").trim().toLowerCase(),
+    password: z.string().min(8, "Password must be at least 8 characters."),
+    role: z.enum(["student", "landlord"]),
+  })
+  .refine((data) => data.role !== "student" || data.email.endsWith(ACADIA_EMAIL_DOMAIN), {
+    message: `Students must sign up with an ${ACADIA_EMAIL_DOMAIN} email address.`,
+    path: ["email"],
+  });
 
 export const LoginSchema = z.object({
   email: z.email("Enter a valid email address.").trim().toLowerCase(),

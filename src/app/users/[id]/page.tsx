@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/dal";
 import StarRating from "@/components/star-rating";
 import RatingForm from "@/components/rating-form";
+import RoleBadge from "@/components/role-badge";
 import ListingCard from "@/components/listing-card";
 import RoommateCard from "@/components/roommate-card";
 
@@ -13,6 +14,7 @@ async function getProfile(id: string) {
     select: {
       id: true,
       name: true,
+      role: true,
       createdAt: true,
       listings: {
         where: { status: "active" },
@@ -76,7 +78,10 @@ export default async function UserProfilePage({
       <div className="rounded-xl border border-card-border bg-card p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">{user.name}</h1>
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-2xl font-bold tracking-tight">{user.name}</h1>
+              <RoleBadge role={user.role} />
+            </div>
             <p className="mt-1 text-sm text-muted">
               Member since{" "}
               {user.createdAt.toLocaleDateString("en-CA", { month: "long", year: "numeric" })}

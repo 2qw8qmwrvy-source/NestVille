@@ -19,6 +19,7 @@ export type AuthFormState =
         name?: string[];
         email?: string[];
         password?: string[];
+        role?: string[];
       };
       message?: string;
     }
@@ -32,13 +33,14 @@ export async function signup(
     name: formData.get("name"),
     email: formData.get("email"),
     password: formData.get("password"),
+    role: formData.get("role"),
   });
 
   if (!validated.success) {
     return { errors: validated.error.flatten().fieldErrors };
   }
 
-  const { name, email, password } = validated.data;
+  const { name, email, password, role } = validated.data;
 
   const existing = await db.user.findUnique({ where: { email } });
   if (existing) {
@@ -48,7 +50,7 @@ export async function signup(
   const passwordHash = await bcrypt.hash(password, 10);
 
   const user = await db.user.create({
-    data: { name, email, passwordHash },
+    data: { name, email, passwordHash, role },
     select: { id: true },
   });
 
