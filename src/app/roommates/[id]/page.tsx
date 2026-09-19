@@ -6,11 +6,13 @@ import { getCurrentUser } from "@/lib/dal";
 import { deleteRoommatePost } from "@/lib/actions/roommates";
 import { ROOMMATE_TYPES } from "@/lib/validation";
 import DeleteButton from "@/components/delete-button";
+import StarRating from "@/components/star-rating";
+import RoleBadge from "@/components/role-badge";
 
 async function getPost(id: string) {
   return db.roommatePost.findUnique({
     where: { id },
-    include: { author: { select: { id: true, name: true, email: true } } },
+    include: { author: { select: { id: true, name: true, email: true, role: true } } },
   });
 }
 
@@ -37,6 +39,12 @@ export default async function RoommatePostPage({
   const user = await getCurrentUser();
   const isOwner = user?.id === post.authorId;
   const typeLabel = ROOMMATE_TYPES.find((t) => t.value === post.type)?.label ?? post.type;
+
+  const ratingAgg = await db.rating.aggregate({
+    where: { ratedUserId: post.authorId },
+    _avg: { score: true },
+    _count: true,
+  });
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6">
@@ -91,7 +99,7 @@ export default async function RoommatePostPage({
             ) : user ? (
               <a
                 href={`mailto:${post.author.email}?subject=${encodeURIComponent(
-                  `Wolfville Student Rentals: ${post.title}`
+                  `NestVille: ${post.title}`
                 )}`}
                 className="block rounded-full bg-garnet px-4 py-2 text-center text-sm font-semibold text-white transition hover:bg-garnet-dark"
               >
@@ -108,8 +116,19 @@ export default async function RoommatePostPage({
           </div>
 
           <div className="rounded-xl border border-card-border bg-card p-5 text-sm text-muted">
-            <p className="font-semibold text-foreground">Posted by {post.author.name}</p>
-            <p className="mt-2">Meet in a public place first and trust your instincts.</p>
+            <Link
+              href={`/users/${post.author.id}`}
+              className="font-semibold text-foreground hover:text-garnet hover:underline"
+            >
+              Posted by {post.author.name}
+            </Link>
+            <div className="mt-1.5">
+              <RoleBadge role={post.author.role} />
+            </div>
+            <div className="mt-1.5">
+              <StarRating average={ratingAgg._avg.score ?? 0} count={ratingAgg._count} size="sm" />
+            </div>
+            <p className="mt-3">Meet in a public place first and trust your instincts.</p>
           </div>
         </aside>
       </div>

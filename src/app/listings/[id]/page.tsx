@@ -5,13 +5,15 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/dal";
 import { toggleFavorite, deleteListing, setListingStatus } from "@/lib/actions/listings";
 import DeleteButton from "@/components/delete-button";
+import StarRating from "@/components/star-rating";
+import RoleBadge from "@/components/role-badge";
 
 async function getListing(id: string) {
   return db.listing.findUnique({
     where: { id },
     include: {
       images: { orderBy: { position: "asc" } },
-      author: { select: { id: true, name: true, email: true } },
+      author: { select: { id: true, name: true, email: true, role: true } },
     },
   });
 }
@@ -54,6 +56,12 @@ export default async function ListingDetailPage({
     : null;
 
   const activeAmenities = amenityLabels.filter((a) => listing[a.key]);
+
+  const ratingAgg = await db.rating.aggregate({
+    where: { ratedUserId: listing.authorId },
+    _avg: { score: true },
+    _count: true,
+  });
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6">
@@ -184,7 +192,7 @@ export default async function ListingDetailPage({
                   <>
                     <a
                       href={`mailto:${listing.author.email}?subject=${encodeURIComponent(
-                        `Wolfville Student Rentals: ${listing.title}`
+                        `NestVille: ${listing.title}`
                       )}`}
                       className="rounded-full bg-garnet px-4 py-2 text-center text-sm font-semibold text-white transition hover:bg-garnet-dark"
                     >
@@ -212,8 +220,19 @@ export default async function ListingDetailPage({
           </div>
 
           <div className="rounded-xl border border-card-border bg-card p-5 text-sm text-muted">
-            <p className="font-semibold text-foreground">Posted by {listing.author.name}</p>
-            <p className="mt-2">
+            <Link
+              href={`/users/${listing.author.id}`}
+              className="font-semibold text-foreground hover:text-garnet hover:underline"
+            >
+              Posted by {listing.author.name}
+            </Link>
+            <div className="mt-1.5">
+              <RoleBadge role={listing.author.role} />
+            </div>
+            <div className="mt-1.5">
+              <StarRating average={ratingAgg._avg.score ?? 0} count={ratingAgg._count} size="sm" />
+            </div>
+            <p className="mt-3">
               Meet in person before paying anything, and never wire money to someone
               you haven&apos;t met.
             </p>

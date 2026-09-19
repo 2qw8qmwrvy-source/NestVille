@@ -1,8 +1,8 @@
-# Wolfville Student Rentals
+# NestVille
 
-A rental and roommate-matching site for students at Acadia University in Wolfville,
-Nova Scotia. Students (and local landlords) can sign up, browse rental listings,
-post their own listings, and connect on a roommate/sublet board.
+A verified rental and roommate-matching platform for Acadia University students in
+Wolfville, Nova Scotia. Students sign up with their @acadiau.ca email, landlords can
+post rentals, and both sides can rate each other after a rental interaction.
 
 Not affiliated with or endorsed by Acadia University.
 
@@ -13,6 +13,12 @@ Not affiliated with or endorsed by Acadia University.
   12-month, month-to-month).
 - **Roommate & sublet board** — post that you have a room to offer or that you're
   looking for one.
+- **Student verification** — students sign up with an @acadiau.ca email; landlords
+  can sign up with any email. Verified students show a badge on their profile,
+  listings, and roommate posts.
+- **Ratings & public profiles** — after a rental interaction, rate the other person
+  1-5 stars with an optional comment. Average ratings show on listings, roommate
+  posts, and each user's public profile page.
 - **Accounts** — email/password sign up and login, with sessions stored in a signed,
   HTTP-only cookie.
 - **Dashboard** — manage your own listings and roommate posts, and see the listings
@@ -67,9 +73,11 @@ This creates a local SQLite database at `./dev.db` and applies the schema.
 npm run db:seed
 ```
 
-Adds a few sample listings and roommate posts, plus three demo accounts
-(`maya@example.com`, `jordan@example.com`, `priya@example.com`, password
-`password123`).
+Adds a few sample listings and roommate posts, plus three demo accounts (password
+`password123` for all):
+
+- `maya@example.com` — landlord
+- `jordan@acadiau.ca`, `priya@acadiau.ca` — students
 
 ### 5. Run the dev server
 
@@ -96,14 +104,14 @@ Visit [http://localhost:3000](http://localhost:3000).
 
 ```
 src/
-  app/            Routes (App Router): home, listings, roommates, dashboard, auth
-  components/     Shared UI components (forms, cards, nav)
+  app/            Routes (App Router): home, listings, roommates, dashboard, auth, user profiles
+  components/     Shared UI components (forms, cards, nav, ratings)
   lib/
-    actions/      Server Actions (create/update/delete for listings & roommate posts, auth)
+    actions/      Server Actions (create/update/delete for listings, roommate posts, ratings, auth)
     db.ts         Prisma Client singleton
     session.ts    Signed session cookie helpers (jose)
     dal.ts        Data access layer / auth checks (verifySession, getCurrentUser)
-    validation.ts Zod schemas + shared option lists
+    validation.ts Zod schemas + shared option lists (incl. @acadiau.ca gating)
   proxy.ts        Optimistic auth redirects for protected/auth-only routes
 prisma/
   schema.prisma   Data model
@@ -116,6 +124,21 @@ prisma/
   native enum/array support, so option fields are validated strings via Zod).
 - Listing photos are added as pasted image URLs rather than file uploads, to
   avoid needing an object-storage service for a first version.
+- Every user has a `role` of `"student"` or `"landlord"`. Only the `student` role
+  is gated to `@acadiau.ca` emails (enforced in `SignupSchema`); landlords can use
+  any email.
 - The database is SQLite for zero-setup local development. Swapping to Postgres
   later mainly means changing the Prisma datasource provider, connection string,
   and driver adapter.
+
+## Out of scope for now
+
+The following ideas from early product discussions are **not** implemented yet and
+would need real infrastructure decisions first:
+
+- Paid/featured listings, subletting fees, or commission — needs a payment
+  processor (e.g. Stripe) and a business entity to receive funds.
+- A landlord analytics dashboard (click/inquiry tracking) — needs an events
+  pipeline, not just a query.
+- Group booking and a formal scam-report review queue — buildable, but need an
+  admin/moderation view to be useful; ask if you want these prioritized next.

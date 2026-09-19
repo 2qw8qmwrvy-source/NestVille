@@ -1,4 +1,4 @@
-// Prisma schema for Wolfville Student Rentals
+// Prisma schema for NestVille
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
@@ -11,14 +11,17 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  name          String
-  email         String         @unique
-  passwordHash  String
-  createdAt     DateTime       @default(now())
-  listings      Listing[]
-  roommatePosts RoommatePost[]
-  favorites     Favorite[]
+  id              String         @id @default(cuid())
+  name            String
+  email           String         @unique
+  passwordHash    String
+  role            String         @default("student")
+  createdAt       DateTime       @default(now())
+  listings        Listing[]
+  roommatePosts   RoommatePost[]
+  favorites       Favorite[]
+  ratingsGiven    Rating[]       @relation("RatingsGiven")
+  ratingsReceived Rating[]       @relation("RatingsReceived")
 }
 
 model Listing {
@@ -88,4 +91,18 @@ model Favorite {
 
   @@unique([userId, listingId])
   @@index([listingId])
+}
+
+model Rating {
+  id          String   @id @default(cuid())
+  score       Int
+  comment     String?
+  createdAt   DateTime @default(now())
+  raterId     String
+  ratedUserId String
+  rater       User     @relation("RatingsGiven", fields: [raterId], references: [id], onDelete: Cascade)
+  ratedUser   User     @relation("RatingsReceived", fields: [ratedUserId], references: [id], onDelete: Cascade)
+
+  @@unique([raterId, ratedUserId])
+  @@index([ratedUserId])
 }

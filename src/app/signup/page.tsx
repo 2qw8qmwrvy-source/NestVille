@@ -17,8 +17,8 @@ export default async function SignupPage({
     <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-16 sm:px-6">
       <h1 className="text-2xl font-bold tracking-tight">Create your account</h1>
       <p className="mt-1 text-muted">
-        Use any email to sign up &mdash; a full Acadia rollout can require an @acadiau.ca
-        address later.
+        Students verify with their @acadiau.ca email so everyone knows who
+        they&apos;re dealing with. Landlords can sign up with any email.
       </p>
 
       <div className="mt-8">
