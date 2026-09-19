@@ -16,12 +16,9 @@ export default async function Navbar() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <Link href="/" className="flex items-center gap-2 font-semibold">
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-garnet text-sm font-bold text-white">
-            WV
+            NV
           </span>
-          <span className="hidden text-lg tracking-tight sm:inline">
-            Wolfville Student Rentals
-          </span>
-          <span className="text-lg tracking-tight sm:hidden">WSR</span>
+          <span className="text-lg tracking-tight">NestVille</span>
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm font-medium md:flex">

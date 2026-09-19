@@ -7,11 +7,12 @@ import { deleteRoommatePost } from "@/lib/actions/roommates";
 import { ROOMMATE_TYPES } from "@/lib/validation";
 import DeleteButton from "@/components/delete-button";
 import StarRating from "@/components/star-rating";
+import RoleBadge from "@/components/role-badge";
 
 async function getPost(id: string) {
   return db.roommatePost.findUnique({
     where: { id },
-    include: { author: { select: { id: true, name: true, email: true } } },
+    include: { author: { select: { id: true, name: true, email: true, role: true } } },
   });
 }
 
@@ -98,7 +99,7 @@ export default async function RoommatePostPage({
             ) : user ? (
               <a
                 href={`mailto:${post.author.email}?subject=${encodeURIComponent(
-                  `Wolfville Student Rentals: ${post.title}`
+                  `NestVille: ${post.title}`
                 )}`}
                 className="block rounded-full bg-garnet px-4 py-2 text-center text-sm font-semibold text-white transition hover:bg-garnet-dark"
               >
@@ -121,7 +122,10 @@ export default async function RoommatePostPage({
             >
               Posted by {post.author.name}
             </Link>
-            <div className="mt-1">
+            <div className="mt-1.5">
+              <RoleBadge role={post.author.role} />
+            </div>
+            <div className="mt-1.5">
               <StarRating average={ratingAgg._avg.score ?? 0} count={ratingAgg._count} size="sm" />
             </div>
             <p className="mt-3">Meet in a public place first and trust your instincts.</p>

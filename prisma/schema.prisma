@@ -1,4 +1,4 @@
-// Prisma schema for Wolfville Student Rentals
+// Prisma schema for NestVille
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
@@ -15,6 +15,7 @@ model User {
   name            String
   email           String         @unique
   passwordHash    String
+  role            String         @default("student")
   createdAt       DateTime       @default(now())
   listings        Listing[]
   roommatePosts   RoommatePost[]

@@ -11,25 +11,16 @@ const db = new PrismaClient({ adapter });
 async function main() {
   const passwordHash = await bcrypt.hash("password123", 10);
 
+  // Clean slate: deleting users cascades to their listings, posts, favorites, and ratings.
+  await db.user.deleteMany({});
+
   const [maya, jordan, priya] = await Promise.all(
     [
-      { name: "Maya Chisholm", email: "maya@example.com" },
-      { name: "Jordan Sarty", email: "jordan@example.com" },
-      { name: "Priya Nair", email: "priya@example.com" },
-    ].map((u) =>
-      db.user.upsert({
-        where: { email: u.email },
-        update: {},
-        create: { ...u, passwordHash },
-      })
-    )
+      { name: "Maya Chisholm", email: "maya@example.com", role: "landlord" },
+      { name: "Jordan Sarty", email: "jordan@acadiau.ca", role: "student" },
+      { name: "Priya Nair", email: "priya@acadiau.ca", role: "student" },
+    ].map((u) => db.user.create({ data: { ...u, passwordHash } }))
   );
-
-  await db.favorite.deleteMany({});
-  await db.rating.deleteMany({});
-  await db.listingImage.deleteMany({});
-  await db.listing.deleteMany({});
-  await db.roommatePost.deleteMany({});
 
   await db.listing.create({
     data: {
@@ -124,9 +115,19 @@ async function main() {
     },
   });
 
+  await db.rating.create({
+    data: {
+      score: 5,
+      comment: "Great landlord, responsive and the unit was exactly as described!",
+      raterId: jordan.id,
+      ratedUserId: maya.id,
+    },
+  });
+
   console.log("Seeded database with demo listings and roommate posts.");
   console.log("Demo accounts (password: password123):");
-  console.log("  maya@example.com, jordan@example.com, priya@example.com");
+  console.log("  maya@example.com (landlord)");
+  console.log("  jordan@acadiau.ca, priya@acadiau.ca (students)");
 }
 
 main()

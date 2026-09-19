@@ -34,13 +34,13 @@ export default function Footer() {
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 font-semibold">
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gold-light text-sm font-bold text-garnet-dark">
-                WV
+                NV
               </span>
-              <span className="text-lg tracking-tight">Wolfville Student Rentals</span>
+              <span className="text-lg tracking-tight">NestVille</span>
             </div>
             <p className="mt-4 text-sm text-footer-muted">
-              An independent, student-run listings board for the Wolfville, Nova
-              Scotia community near Acadia University.
+              NestVille is an independent, student-run listings board for the
+              Wolfville, Nova Scotia community near Acadia University.
             </p>
           </div>
 
@@ -68,7 +68,7 @@ export default function Footer() {
             person, view the unit before paying, and never wire money to someone you
             haven&apos;t met.
           </p>
-          <p className="mt-2">&copy; {new Date().getFullYear()} Wolfville Student Rentals.</p>
+          <p className="mt-2">&copy; {new Date().getFullYear()} NestVille.</p>
         </div>
       </div>
 

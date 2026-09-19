@@ -23,11 +23,11 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   title: {
-    default: "Wolfville Student Rentals",
-    template: "%s | Wolfville Student Rentals",
+    default: "NestVille",
+    template: "%s | NestVille",
   },
   description:
-    "Find rentals and roommates near Acadia University in Wolfville, Nova Scotia. Browse student-friendly listings, post a room, or find a roommate.",
+    "NestVille is a verified rental and roommate-matching platform for Acadia University students in Wolfville, Nova Scotia.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
