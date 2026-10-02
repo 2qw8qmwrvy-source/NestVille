@@ -14,11 +14,12 @@ async function main() {
   // Clean slate: deleting users cascades to their listings, posts, favorites, and ratings.
   await db.user.deleteMany({});
 
-  const [maya, jordan, priya] = await Promise.all(
+  const [maya, jordan, priya, sam] = await Promise.all(
     [
-      { name: "Maya Chisholm", email: "maya@example.com", role: "landlord" },
+      { name: "Maya Chisholm", email: "maya@example.com", role: "landlord", isAdmin: true },
       { name: "Jordan Sarty", email: "jordan@acadiau.ca", role: "student" },
       { name: "Priya Nair", email: "priya@acadiau.ca", role: "student" },
+      { name: "Sam MacKinnon", email: "sam@acadiau.ca", role: "student" },
     ].map((u) => db.user.create({ data: { ...u, passwordHash } }))
   );
 
@@ -115,19 +116,43 @@ async function main() {
     },
   });
 
-  await db.rating.create({
+  await db.rating.createMany({
+    data: [
+      {
+        score: 5,
+        comment: "Great landlord, responsive and the unit was exactly as described!",
+        raterId: jordan.id,
+        ratedUserId: maya.id,
+      },
+      {
+        score: 5,
+        comment: "Quick to fix a maintenance issue, would rent from her again.",
+        raterId: priya.id,
+        ratedUserId: maya.id,
+      },
+      {
+        score: 4,
+        comment: "Smooth move-in, clear communication about the lease.",
+        raterId: sam.id,
+        ratedUserId: maya.id,
+      },
+    ],
+  });
+
+  await db.report.create({
     data: {
-      score: 5,
-      comment: "Great landlord, responsive and the unit was exactly as described!",
-      raterId: jordan.id,
-      ratedUserId: maya.id,
+      reason: "Other",
+      details: "Sample report for testing the admin review queue.",
+      reporterId: priya.id,
+      roommatePostId: (await db.roommatePost.findFirstOrThrow({ where: { authorId: jordan.id } }))
+        .id,
     },
   });
 
   console.log("Seeded database with demo listings and roommate posts.");
   console.log("Demo accounts (password: password123):");
-  console.log("  maya@example.com (landlord)");
-  console.log("  jordan@acadiau.ca, priya@acadiau.ca (students)");
+  console.log("  maya@example.com (landlord, admin, trusted landlord)");
+  console.log("  jordan@acadiau.ca, priya@acadiau.ca, sam@acadiau.ca (students)");
 }
 
 main()

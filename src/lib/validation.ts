@@ -86,6 +86,19 @@ export const RatingSchema = z.object({
   comment: z.string().trim().max(500).optional(),
 });
 
+export const REPORT_REASONS = [
+  "Scam or fraud",
+  "Fake or misleading listing",
+  "Inappropriate content",
+  "Harassment",
+  "Other",
+] as const;
+
+export const ReportSchema = z.object({
+  reason: z.enum(REPORT_REASONS, "Select a reason."),
+  details: z.string().trim().max(1000).optional(),
+});
+
 export const RoommatePostSchema = z.object({
   type: z.enum(["have_room", "need_room"]),
   title: z.string().trim().min(5, "Title must be at least 5 characters.").max(120),

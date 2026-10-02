@@ -6,6 +6,7 @@ import MobileNav from "@/components/mobile-nav";
 const navLinks = [
   { href: "/listings", label: "Rentals" },
   { href: "/roommates", label: "Roommates" },
+  { href: "/how-it-works", label: "How it works" },
 ];
 
 export default async function Navbar() {

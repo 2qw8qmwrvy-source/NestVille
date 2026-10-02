@@ -5,8 +5,11 @@ import { getCurrentUser } from "@/lib/dal";
 import StarRating from "@/components/star-rating";
 import RatingForm from "@/components/rating-form";
 import RoleBadge from "@/components/role-badge";
+import TrustedBadge from "@/components/trusted-badge";
+import ReportButton from "@/components/report-button";
 import ListingCard from "@/components/listing-card";
 import RoommateCard from "@/components/roommate-card";
+import { isTrustedLandlord } from "@/lib/trust";
 
 async function getProfile(id: string) {
   const user = await db.user.findUnique({
@@ -81,6 +84,7 @@ export default async function UserProfilePage({
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-2xl font-bold tracking-tight">{user.name}</h1>
               <RoleBadge role={user.role} />
+              {isTrustedLandlord(user.role, average, count) && <TrustedBadge />}
             </div>
             <p className="mt-1 text-sm text-muted">
               Member since{" "}
@@ -89,6 +93,11 @@ export default async function UserProfilePage({
           </div>
           <StarRating average={average} count={count} />
         </div>
+        {currentUser && !isOwnProfile && (
+          <div className="mt-4">
+            <ReportButton target={{ reportedUserId: user.id }} label="Report this profile" />
+          </div>
+        )}
       </div>
 
       {currentUser && !isOwnProfile && (

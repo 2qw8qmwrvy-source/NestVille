@@ -7,6 +7,9 @@ import { toggleFavorite, deleteListing, setListingStatus } from "@/lib/actions/l
 import DeleteButton from "@/components/delete-button";
 import StarRating from "@/components/star-rating";
 import RoleBadge from "@/components/role-badge";
+import TrustedBadge from "@/components/trusted-badge";
+import ReportButton from "@/components/report-button";
+import { isTrustedLandlord } from "@/lib/trust";
 
 async function getListing(id: string) {
   return db.listing.findUnique({
@@ -170,6 +173,12 @@ export default async function ListingDetailPage({
                 >
                   Edit listing
                 </Link>
+                <Link
+                  href={`/listings/${listing.id}/lease`}
+                  className="rounded-full border border-card-border px-4 py-2 text-center text-sm font-semibold transition hover:border-garnet hover:text-garnet"
+                >
+                  Lease summary tool
+                </Link>
                 <form
                   action={setListingStatus.bind(
                     null,
@@ -226,8 +235,11 @@ export default async function ListingDetailPage({
             >
               Posted by {listing.author.name}
             </Link>
-            <div className="mt-1.5">
+            <div className="mt-1.5 flex flex-wrap gap-1.5">
               <RoleBadge role={listing.author.role} />
+              {isTrustedLandlord(listing.author.role, ratingAgg._avg.score ?? 0, ratingAgg._count) && (
+                <TrustedBadge />
+              )}
             </div>
             <div className="mt-1.5">
               <StarRating average={ratingAgg._avg.score ?? 0} count={ratingAgg._count} size="sm" />
@@ -236,6 +248,11 @@ export default async function ListingDetailPage({
               Meet in person before paying anything, and never wire money to someone
               you haven&apos;t met.
             </p>
+            {user && !isOwner && (
+              <div className="mt-3">
+                <ReportButton target={{ listingId: listing.id }} label="Report this listing" />
+              </div>
+            )}
           </div>
         </aside>
       </div>

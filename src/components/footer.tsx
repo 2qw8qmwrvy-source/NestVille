@@ -21,7 +21,9 @@ const columns = [
     title: "About",
     links: [
       { href: "/about", label: "About & safety tips" },
-      { href: "/listings/new", label: "Post a listing" },
+      { href: "/how-it-works", label: "How it works" },
+      { href: "/faq", label: "FAQ" },
+      { href: "/landlords", label: "For landlords" },
     ],
   },
 ];

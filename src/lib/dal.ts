@@ -22,8 +22,14 @@ export const getCurrentUser = cache(async () => {
 
   const user = await db.user.findUnique({
     where: { id: session.userId },
-    select: { id: true, name: true, email: true, createdAt: true },
+    select: { id: true, name: true, email: true, role: true, isAdmin: true, createdAt: true },
   });
 
+  return user;
+});
+
+export const requireAdmin = cache(async () => {
+  const user = await getCurrentUser();
+  if (!user?.isAdmin) redirect("/");
   return user;
 });

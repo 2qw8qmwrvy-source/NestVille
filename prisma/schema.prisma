@@ -16,12 +16,15 @@ model User {
   email           String         @unique
   passwordHash    String
   role            String         @default("student")
+  isAdmin         Boolean        @default(false)
   createdAt       DateTime       @default(now())
   listings        Listing[]
   roommatePosts   RoommatePost[]
   favorites       Favorite[]
   ratingsGiven    Rating[]       @relation("RatingsGiven")
   ratingsReceived Rating[]       @relation("RatingsReceived")
+  reportsFiled    Report[]       @relation("ReportsFiled")
+  reportsAgainst  Report[]       @relation("ReportsAgainst")
 }
 
 model Listing {
@@ -48,6 +51,7 @@ model Listing {
   author                User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
   images                ListingImage[]
   favorites             Favorite[]
+  reports               Report[]
 
   @@index([authorId])
   @@index([status])
@@ -76,6 +80,7 @@ model RoommatePost {
   updatedAt   DateTime  @updatedAt
   authorId    String
   author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  reports     Report[]
 
   @@index([authorId])
   @@index([type])
@@ -105,4 +110,23 @@ model Rating {
 
   @@unique([raterId, ratedUserId])
   @@index([ratedUserId])
+}
+
+model Report {
+  id             String        @id @default(cuid())
+  reason         String
+  details        String?
+  status         String        @default("open")
+  createdAt      DateTime      @default(now())
+  reporterId     String
+  reporter       User          @relation("ReportsFiled", fields: [reporterId], references: [id], onDelete: Cascade)
+  listingId      String?
+  listing        Listing?      @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  roommatePostId String?
+  roommatePost   RoommatePost? @relation(fields: [roommatePostId], references: [id], onDelete: Cascade)
+  reportedUserId String?
+  reportedUser   User?         @relation("ReportsAgainst", fields: [reportedUserId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([reporterId])
 }

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "@/lib/session";
 
-const protectedPrefixes = ["/dashboard", "/listings/new", "/roommates/new"];
+const protectedPrefixes = ["/dashboard", "/listings/new", "/roommates/new", "/admin"];
 const authOnlyRoutes = ["/login", "/signup"];
 
 function isEditRoute(pathname: string) {

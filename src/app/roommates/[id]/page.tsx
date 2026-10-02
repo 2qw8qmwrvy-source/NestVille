@@ -8,6 +8,9 @@ import { ROOMMATE_TYPES } from "@/lib/validation";
 import DeleteButton from "@/components/delete-button";
 import StarRating from "@/components/star-rating";
 import RoleBadge from "@/components/role-badge";
+import TrustedBadge from "@/components/trusted-badge";
+import ReportButton from "@/components/report-button";
+import { isTrustedLandlord } from "@/lib/trust";
 
 async function getPost(id: string) {
   return db.roommatePost.findUnique({
@@ -122,13 +125,21 @@ export default async function RoommatePostPage({
             >
               Posted by {post.author.name}
             </Link>
-            <div className="mt-1.5">
+            <div className="mt-1.5 flex flex-wrap gap-1.5">
               <RoleBadge role={post.author.role} />
+              {isTrustedLandlord(post.author.role, ratingAgg._avg.score ?? 0, ratingAgg._count) && (
+                <TrustedBadge />
+              )}
             </div>
             <div className="mt-1.5">
               <StarRating average={ratingAgg._avg.score ?? 0} count={ratingAgg._count} size="sm" />
             </div>
             <p className="mt-3">Meet in a public place first and trust your instincts.</p>
+            {user && !isOwner && (
+              <div className="mt-3">
+                <ReportButton target={{ roommatePostId: post.id }} label="Report this post" />
+              </div>
+            )}
           </div>
         </aside>
       </div>

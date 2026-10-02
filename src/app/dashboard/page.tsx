@@ -14,7 +14,10 @@ export default async function DashboardPage() {
   const session = await requireSession();
 
   const [user, myListings, myRoommatePosts, favorites] = await Promise.all([
-    db.user.findUnique({ where: { id: session.userId }, select: { name: true, email: true } }),
+    db.user.findUnique({
+      where: { id: session.userId },
+      select: { name: true, email: true, isAdmin: true },
+    }),
     db.listing.findMany({
       where: { authorId: session.userId },
       orderBy: { createdAt: "desc" },
@@ -47,12 +50,22 @@ export default async function DashboardPage() {
           <h1 className="text-3xl font-bold tracking-tight">Welcome, {user?.name}</h1>
           <p className="mt-1 text-muted">{user?.email}</p>
         </div>
-        <Link
-          href={`/users/${session.userId}`}
-          className="rounded-full border border-card-border px-4 py-2 text-sm font-semibold transition hover:border-garnet hover:text-garnet"
-        >
-          View your public profile
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          {user?.isAdmin && (
+            <Link
+              href="/admin/reports"
+              className="rounded-full border border-card-border px-4 py-2 text-sm font-semibold transition hover:border-garnet hover:text-garnet"
+            >
+              Report queue
+            </Link>
+          )}
+          <Link
+            href={`/users/${session.userId}`}
+            className="rounded-full border border-card-border px-4 py-2 text-sm font-semibold transition hover:border-garnet hover:text-garnet"
+          >
+            View your public profile
+          </Link>
+        </div>
       </div>
       <div className="mt-2">
         <StarRating average={ratingAgg._avg.score ?? 0} count={ratingAgg._count} />
