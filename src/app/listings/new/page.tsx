@@ -12,14 +12,18 @@ export default async function NewListingPage() {
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6">
-      <h1 className="text-2xl font-bold tracking-tight">Post a rental</h1>
-      <p className="mt-1 text-muted">
-        Share the details students will want to know before reaching out.
-      </p>
-
-      <div className="mt-8">
-        <ListingForm action={createListing} submitLabel="Publish listing" />
+      <div className="mb-8">
+        <span className="inline-flex items-center rounded-full bg-gold-light/30 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-garnet-dark">
+          Post a listing
+        </span>
+        <h1 className="mt-3 text-3xl font-bold tracking-tight">Tell students about your place</h1>
+        <p className="mt-2 text-muted">
+          Share the details students will want to know before reaching out. Takes about
+          two minutes, and you can edit anytime.
+        </p>
       </div>
+
+      <ListingForm action={createListing} submitLabel="Publish listing" cancelHref="/listings" />
     </div>
   );
 }

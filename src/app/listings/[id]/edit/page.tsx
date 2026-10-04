@@ -29,33 +29,37 @@ export default async function EditListingPage({
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6">
-      <h1 className="text-2xl font-bold tracking-tight">Edit listing</h1>
-      <p className="mt-1 text-muted">Update the details for {listing.title}.</p>
-
-      <div className="mt-8">
-        <ListingForm
-          action={action}
-          submitLabel="Save changes"
-          defaults={{
-            title: listing.title,
-            description: listing.description,
-            address: listing.address,
-            neighborhood: listing.neighborhood ?? undefined,
-            price: listing.price,
-            bedrooms: listing.bedrooms,
-            bathrooms: listing.bathrooms,
-            propertyType: listing.propertyType,
-            availableFrom: listing.availableFrom.toISOString().slice(0, 10),
-            leaseLength: listing.leaseLength ?? undefined,
-            furnished: listing.furnished,
-            petsAllowed: listing.petsAllowed,
-            utilitiesIncluded: listing.utilitiesIncluded,
-            parking: listing.parking,
-            laundry: listing.laundry,
-            images: listing.images.map((i) => i.url),
-          }}
-        />
+      <div className="mb-8">
+        <span className="inline-flex items-center rounded-full bg-gold-light/30 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-garnet-dark">
+          Edit listing
+        </span>
+        <h1 className="mt-3 text-3xl font-bold tracking-tight">Update {listing.title}</h1>
+        <p className="mt-2 text-muted">Keep the details current so students know what to expect.</p>
       </div>
+
+      <ListingForm
+        action={action}
+        submitLabel="Save changes"
+        cancelHref={`/listings/${id}`}
+        defaults={{
+          title: listing.title,
+          description: listing.description,
+          address: listing.address,
+          neighborhood: listing.neighborhood ?? undefined,
+          price: listing.price,
+          bedrooms: listing.bedrooms,
+          bathrooms: listing.bathrooms,
+          propertyType: listing.propertyType,
+          availableFrom: listing.availableFrom.toISOString().slice(0, 10),
+          leaseLength: listing.leaseLength ?? undefined,
+          furnished: listing.furnished,
+          petsAllowed: listing.petsAllowed,
+          utilitiesIncluded: listing.utilitiesIncluded,
+          parking: listing.parking,
+          laundry: listing.laundry,
+          images: listing.images.map((i) => i.url),
+        }}
+      />
     </div>
   );
 }
