@@ -15,7 +15,15 @@ const typeLabel: Record<string, string> = {
   need_room: "Looking for a room",
 };
 
-export default function RoommateCard({ post }: { post: RoommatePostCardData }) {
+export default function RoommateCard({
+  post,
+  matchScore,
+  matchReasons,
+}: {
+  post: RoommatePostCardData;
+  matchScore?: number;
+  matchReasons?: string[];
+}) {
   return (
     <Link
       href={`/roommates/${post.id}`}
@@ -41,6 +49,18 @@ export default function RoommateCard({ post }: { post: RoommatePostCardData }) {
           : ""}
       </p>
       <p className="text-sm text-muted">Posted by {post.author.name}</p>
+      {matchScore !== undefined && (
+        <div className="mt-1 flex flex-wrap items-center gap-1.5 border-t border-card-border pt-2">
+          <span className="rounded-full border border-card-border px-2 py-0.5 text-xs font-semibold text-muted">
+            {matchScore}% match
+          </span>
+          {matchReasons?.map((reason) => (
+            <span key={reason} className="text-xs text-muted">
+              {reason}
+            </span>
+          ))}
+        </div>
+      )}
     </Link>
   );
 }

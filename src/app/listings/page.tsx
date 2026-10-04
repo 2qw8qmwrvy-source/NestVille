@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import ListingCard from "@/components/listing-card";
 import Select from "@/components/ui/select";
 import { NEIGHBORHOODS, PROPERTY_TYPES, LEASE_LENGTHS } from "@/lib/validation";
+import { tokenize, relevanceScore, SORT_OPTIONS } from "@/lib/search";
 import type { Prisma } from "@/generated/prisma/client";
 
 export const metadata: Metadata = {
@@ -18,6 +19,7 @@ type SearchParams = {
   propertyType?: string;
   neighborhood?: string;
   leaseLength?: string;
+  sort?: string;
 };
 
 export default async function ListingsPage({
@@ -31,13 +33,14 @@ export default async function ListingsPage({
     status: "active",
   };
 
-  if (params.q) {
-    where.OR = [
-      { title: { contains: params.q } },
-      { description: { contains: params.q } },
-      { address: { contains: params.q } },
-      { neighborhood: { contains: params.q } },
-    ];
+  const words = params.q ? tokenize(params.q) : [];
+  if (words.length > 0) {
+    where.OR = words.flatMap((word) => [
+      { title: { contains: word } },
+      { description: { contains: word } },
+      { address: { contains: word } },
+      { neighborhood: { contains: word } },
+    ]);
   }
   if (params.minPrice) {
     where.price = { ...(where.price as object), gte: Number(params.minPrice) };
@@ -63,6 +66,18 @@ export default async function ListingsPage({
     orderBy: { createdAt: "desc" },
     include: { images: { orderBy: { position: "asc" }, take: 1 } },
   });
+
+  const sort = params.sort || (words.length > 0 ? "relevance" : "newest");
+  const sortedListings = [...listings];
+  if (sort === "relevance" && words.length > 0) {
+    sortedListings.sort((a, b) => relevanceScore(b, words) - relevanceScore(a, words));
+  } else if (sort === "price_asc") {
+    sortedListings.sort((a, b) => a.price - b.price);
+  } else if (sort === "price_desc") {
+    sortedListings.sort((a, b) => b.price - a.price);
+  } else if (sort === "bedrooms") {
+    sortedListings.sort((a, b) => b.bedrooms - a.bedrooms);
+  }
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6">
@@ -128,6 +143,14 @@ export default async function ListingsPage({
             </option>
           ))}
         </Select>
+        <Select name="sort" defaultValue={params.sort} className="col-span-2 sm:col-span-1">
+          <option value="">{words.length > 0 ? "Sort: Best match" : "Sort: Newest"}</option>
+          {SORT_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </Select>
         <div className="col-span-2 flex gap-2 sm:col-span-3 lg:col-span-1">
           <button
             type="submit"
@@ -144,13 +167,13 @@ export default async function ListingsPage({
         </div>
       </form>
 
-      {listings.length === 0 ? (
+      {sortedListings.length === 0 ? (
         <div className="rounded-xl border border-dashed border-card-border p-10 text-center text-muted">
           No listings match your search. Try adjusting your filters.
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {listings.map((listing) => (
+          {sortedListings.map((listing) => (
             <ListingCard key={listing.id} listing={listing} />
           ))}
         </div>

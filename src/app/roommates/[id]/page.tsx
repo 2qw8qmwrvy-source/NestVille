@@ -10,7 +10,9 @@ import StarRating from "@/components/star-rating";
 import RoleBadge from "@/components/role-badge";
 import TrustedBadge from "@/components/trusted-badge";
 import ReportButton from "@/components/report-button";
+import RoommateCard from "@/components/roommate-card";
 import { isTrustedLandlord } from "@/lib/trust";
+import { rankMatches } from "@/lib/matching";
 
 async function getPost(id: string) {
   return db.roommatePost.findUnique({
@@ -48,6 +50,14 @@ export default async function RoommatePostPage({
     _avg: { score: true },
     _count: true,
   });
+
+  const oppositeType = post.type === "have_room" ? "need_room" : "have_room";
+  const candidates = await db.roommatePost.findMany({
+    where: { type: oppositeType, authorId: { not: post.authorId } },
+    include: { author: { select: { name: true } } },
+    take: 50,
+  });
+  const matches = rankMatches(post, candidates, 3);
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6">
@@ -143,6 +153,27 @@ export default async function RoommatePostPage({
           </div>
         </aside>
       </div>
+
+      {matches.length > 0 && (
+        <section className="mt-10">
+          <h2 className="text-lg font-bold tracking-tight">
+            {oppositeType === "have_room" ? "Rooms that might fit" : "People who might fit"}
+          </h2>
+          <p className="mt-1 text-sm text-muted">
+            Ranked by budget, location, and move-in dates in common with this post.
+          </p>
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {matches.map((m) => (
+              <RoommateCard
+                key={m.post.id}
+                post={m.post}
+                matchScore={m.score}
+                matchReasons={m.reasons}
+              />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
