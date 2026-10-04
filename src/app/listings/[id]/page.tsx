@@ -9,6 +9,7 @@ import StarRating from "@/components/star-rating";
 import RoleBadge from "@/components/role-badge";
 import TrustedBadge from "@/components/trusted-badge";
 import ReportButton from "@/components/report-button";
+import Avatar from "@/components/avatar";
 import { isTrustedLandlord } from "@/lib/trust";
 
 async function getListing(id: string) {
@@ -229,13 +230,16 @@ export default async function ListingDetailPage({
           </div>
 
           <div className="rounded-xl border border-card-border bg-card p-5 text-sm text-muted">
-            <Link
-              href={`/users/${listing.author.id}`}
-              className="font-semibold text-foreground hover:text-garnet hover:underline"
-            >
-              Posted by {listing.author.name}
-            </Link>
-            <div className="mt-1.5 flex flex-wrap gap-1.5">
+            <div className="flex items-center gap-3">
+              <Avatar name={listing.author.name} size="sm" />
+              <Link
+                href={`/users/${listing.author.id}`}
+                className="font-semibold text-foreground hover:text-garnet hover:underline"
+              >
+                Posted by {listing.author.name}
+              </Link>
+            </div>
+            <div className="mt-2 flex flex-wrap gap-1.5">
               <RoleBadge role={listing.author.role} />
               {isTrustedLandlord(listing.author.role, ratingAgg._avg.score ?? 0, ratingAgg._count) && (
                 <TrustedBadge />

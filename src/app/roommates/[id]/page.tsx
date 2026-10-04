@@ -11,6 +11,7 @@ import RoleBadge from "@/components/role-badge";
 import TrustedBadge from "@/components/trusted-badge";
 import ReportButton from "@/components/report-button";
 import RoommateCard from "@/components/roommate-card";
+import Avatar from "@/components/avatar";
 import { isTrustedLandlord } from "@/lib/trust";
 import { rankMatches } from "@/lib/matching";
 
@@ -129,13 +130,16 @@ export default async function RoommatePostPage({
           </div>
 
           <div className="rounded-xl border border-card-border bg-card p-5 text-sm text-muted">
-            <Link
-              href={`/users/${post.author.id}`}
-              className="font-semibold text-foreground hover:text-garnet hover:underline"
-            >
-              Posted by {post.author.name}
-            </Link>
-            <div className="mt-1.5 flex flex-wrap gap-1.5">
+            <div className="flex items-center gap-3">
+              <Avatar name={post.author.name} size="sm" />
+              <Link
+                href={`/users/${post.author.id}`}
+                className="font-semibold text-foreground hover:text-garnet hover:underline"
+              >
+                Posted by {post.author.name}
+              </Link>
+            </div>
+            <div className="mt-2 flex flex-wrap gap-1.5">
               <RoleBadge role={post.author.role} />
               {isTrustedLandlord(post.author.role, ratingAgg._avg.score ?? 0, ratingAgg._count) && (
                 <TrustedBadge />

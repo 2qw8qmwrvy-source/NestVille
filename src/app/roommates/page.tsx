@@ -38,11 +38,11 @@ export default async function RoommatesPage({
         </Link>
       </div>
 
-      <div className="mb-6 flex flex-wrap gap-2 text-sm">
+      <div className="mb-8 flex flex-wrap gap-2 rounded-2xl border border-card-border bg-card p-3 text-sm shadow-sm">
         <Link
           href="/roommates"
-          className={`rounded-full px-4 py-2 font-medium ${
-            !type ? "bg-garnet text-white" : "border border-card-border"
+          className={`rounded-full px-4 py-2 font-medium transition ${
+            !type ? "bg-garnet text-white" : "hover:bg-background"
           }`}
         >
           All posts
@@ -51,8 +51,8 @@ export default async function RoommatesPage({
           <Link
             key={t.value}
             href={`/roommates?type=${t.value}`}
-            className={`rounded-full px-4 py-2 font-medium ${
-              type === t.value ? "bg-garnet text-white" : "border border-card-border"
+            className={`rounded-full px-4 py-2 font-medium transition ${
+              type === t.value ? "bg-garnet text-white" : "hover:bg-background"
             }`}
           >
             {t.label}

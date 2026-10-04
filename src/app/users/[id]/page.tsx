@@ -9,6 +9,7 @@ import TrustedBadge from "@/components/trusted-badge";
 import ReportButton from "@/components/report-button";
 import ListingCard from "@/components/listing-card";
 import RoommateCard from "@/components/roommate-card";
+import Avatar from "@/components/avatar";
 import { isTrustedLandlord } from "@/lib/trust";
 
 async function getProfile(id: string) {
@@ -78,18 +79,21 @@ export default async function UserProfilePage({
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-10 sm:px-6">
-      <div className="rounded-xl border border-card-border bg-card p-6">
+      <div className="rounded-2xl border border-card-border bg-card p-6 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-bold tracking-tight">{user.name}</h1>
-              <RoleBadge role={user.role} />
-              {isTrustedLandlord(user.role, average, count) && <TrustedBadge />}
+          <div className="flex items-center gap-4">
+            <Avatar name={user.name} size="lg" />
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="text-2xl font-bold tracking-tight">{user.name}</h1>
+                <RoleBadge role={user.role} />
+                {isTrustedLandlord(user.role, average, count) && <TrustedBadge />}
+              </div>
+              <p className="mt-1 text-sm text-muted">
+                Member since{" "}
+                {user.createdAt.toLocaleDateString("en-CA", { month: "long", year: "numeric" })}
+              </p>
             </div>
-            <p className="mt-1 text-sm text-muted">
-              Member since{" "}
-              {user.createdAt.toLocaleDateString("en-CA", { month: "long", year: "numeric" })}
-            </p>
           </div>
           <StarRating average={average} count={count} />
         </div>

@@ -5,6 +5,7 @@ import { requireSession } from "@/lib/dal";
 import ListingCard from "@/components/listing-card";
 import RoommateCard from "@/components/roommate-card";
 import StarRating from "@/components/star-rating";
+import Avatar from "@/components/avatar";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -45,10 +46,16 @@ export default async function DashboardPage() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Welcome, {user?.name}</h1>
-          <p className="mt-1 text-muted">{user?.email}</p>
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-card-border bg-card p-6 shadow-sm">
+        <div className="flex items-center gap-4">
+          <Avatar name={user?.name ?? "?"} size="lg" />
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Welcome, {user?.name}</h1>
+            <p className="mt-1 text-muted">{user?.email}</p>
+            <div className="mt-2">
+              <StarRating average={ratingAgg._avg.score ?? 0} count={ratingAgg._count} />
+            </div>
+          </div>
         </div>
         <div className="flex flex-wrap gap-2">
           {user?.isAdmin && (
@@ -66,9 +73,6 @@ export default async function DashboardPage() {
             View your public profile
           </Link>
         </div>
-      </div>
-      <div className="mt-2">
-        <StarRating average={ratingAgg._avg.score ?? 0} count={ratingAgg._count} />
       </div>
 
       <Section
